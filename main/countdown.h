@@ -6,7 +6,7 @@ namespace countdown {
      * 
      * @param countdownPin countdown pin
      */
-    void initialize(char countdownPin);
+    void initialize(char countdownPin, unsigned long* cntdwnDuration);
 
     /**
      * @brief If the display 
@@ -14,19 +14,15 @@ namespace countdown {
      * @return true: the countdown is on
      * @return false: the countdown is off
      */
-    inline bool isOff();
+    inline bool isOn();
 
     /**
      * @brief returns the time since the start of the countdown
      * 
      * @return unsigned long: time since countdown
      */
-    inline unsigned long startTime();
+    inline unsigned long getEndTime();
 
-    /**
-     * @brief updates the countdown
-     * 
-     */
     void tick();
 
     /**

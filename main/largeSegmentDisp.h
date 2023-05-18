@@ -25,25 +25,6 @@ namespace large_segment_display {
     void nextDigit();
 
     /**
-     * @brief Write the current output of serPin, and switches to the next segment or decimal point
-     */
-    void nextSeg();
-
-    /**
-     * @brief briefly turns the pin off and on
-     * 
-     * @param pin pin to tick
-     */
-    inline void tickPin(char pin);
-
-    /**
-     * @brief Turn the serial pin on or off corresponding to LOW HIGH outputs, then call function next Seg
-     * 
-     * @param on whether it should be on or off
-     */
-    void writeSeg(bool on);
-
-    /**
      * @brief Writes the segments and decimal point of the current digit and does not move to the next digit.
      * 
      * @param segs an 8 bit number corresponding to the 8 segments (with the decimal point) that will be written to. 
