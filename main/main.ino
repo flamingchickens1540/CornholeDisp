@@ -6,6 +6,12 @@
 #define lgSegSer 10
 
 #define countdownPin 11
+#define displayPowerPin 12
+
+#define countdownAnalog 0
+#define powerLevelAnalog 1
+
+#define maxCountdownDuration 99999
 
 using namespace large_segment_display;
 using namespace countdown;
@@ -29,7 +35,7 @@ char digits[]{
     0b11110000
 };
 
-unsigned long countdownDuration = 10999;
+unsigned long countdownDuration;
 
 void setup()
 {
@@ -41,11 +47,23 @@ void loop()
 {
     countdown::tick();
 
-    unsigned long timeLeft = countdown::getTimeLeft() / 1000;
+    if(countdown::isOn()) {
+        countdownDuration = analogRead(countdownAnalog) * maxCountdownDuration;
 
-    
+        unsigned long timeLeft = countdown::getTimeLeft() / 1000;
 
-    updateLargeDisplay(digits[timeLeft % 10 & 0xf], digits[timeLeft / 10 % 10 & 0xf]);
+        updateDisplay(timeLeft);
+    } else {
+        char power = analogRead(powerLevelAnalog) / 10.23;// might be different for other boards.
+     
+        updateDisplay(power);
+    }
+}
+
+
+inline void updateDisplay(char dig1n2) {
+    updateLargeDisplay(digits[dig1n2 % 10 & 0xf] | 1, digits[dig1n2 / 10 % 10 & 0xf]); // 0b1 because of the decimal point. 
+    large_segment_display::nextDigit();
 }
 
 
@@ -57,7 +75,5 @@ void updateLargeDisplay(char displayDigit1, char displayDigit2) {
     }
 
     large_segment_display::writeDigit(lastDisplayDigit1 = displayDigit1);
-    large_segment_display::nextDigit();
     large_segment_display::writeDigit(lastDisplayDigit2 = displayDigit2);
-    large_segment_display::nextDigit();
 }
