@@ -8,13 +8,10 @@
 #define countdownPin 11
 #define displayPowerPin 12
 
-#define countdownAnalog 0
-#define powerLevelAnalog 1
-
-#define maxCountdownDuration 99999
-
 using namespace large_segment_display;
 using namespace countdown;
+
+unsigned long countdownDuration = 9999;
 
 char digits[]{
     0b11011110,
@@ -35,8 +32,6 @@ char digits[]{
     0b11110000
 };
 
-unsigned long countdownDuration;
-
 void setup()
 {
 	large_segment_display::initialize(lgSegLat, lgSegClk, lgSegSer);
@@ -47,17 +42,9 @@ void loop()
 {
     countdown::tick();
 
-    if(countdown::isOn()) {
-        countdownDuration = analogRead(countdownAnalog) * maxCountdownDuration;
+    unsigned long timeLeft = countdown::getTimeLeft() / 1000;
 
-        unsigned long timeLeft = countdown::getTimeLeft() / 1000;
-
-        updateDisplay(timeLeft);
-    } else {
-        char power = analogRead(powerLevelAnalog) / 10.23;// might be different for other boards.
-     
-        updateDisplay(power);
-    }
+    updateDisplay(timeLeft);
 }
 
 
