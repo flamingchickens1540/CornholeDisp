@@ -11,7 +11,7 @@
 using namespace large_segment_display;
 using namespace countdown;
 
-unsigned long countdownDuration = 9999;
+unsigned long countdownDuration = 10999;
 
 char digits[]{
     0b11011110,
