@@ -6,7 +6,6 @@
 #define lgSegSer 10
 
 #define countdownPin 11
-#define displayPowerPin 12
 
 using namespace large_segment_display;
 using namespace countdown;
