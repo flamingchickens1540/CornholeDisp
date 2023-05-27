@@ -35,26 +35,34 @@ void setup()
 {
 	large_segment_display::initialize(lgSegLat, lgSegClk, lgSegSer);
     countdown::initialize(countdownPin, &countdownDuration);
+    updateDisplay(0);
 }
 
 void loop()
 {
     countdown::tick();
 
-    unsigned long timeLeft = countdown::getTimeLeft() / 1000;
+    unsigned long timeLeft = countdown::getTimeLeft() / 100; // count in deciseconds
 
-    updateDisplay(timeLeft);
+    updateTime(timeLeft);
 }
 
 
-inline void updateDisplay(char dig1n2) {
-    updateLargeDisplay(digits[dig1n2 % 10 & 0xf] | 1, digits[dig1n2 / 10 % 10 & 0xf]); // 0b1 because of the decimal point. 
+inline void updateTime(char timeLeft) {
+
+    char secs = digits[timeLeft / 10 % 10 & 0xf] | 1; // 0b1 because of the decimal point. 
+
+    if(timeLeft > 100) {
+        updateLargeDisplay(secs, digits[timeLeft / 100 % 10 & 0xf]);
+    } else {
+        updateLargeDisplay(digits[timeLeft % 10 & 0xf], secs);
+    }
     large_segment_display::nextDigit();
 }
 
 
-char lastDisplayDigit1;
-char lastDisplayDigit2;
+char lastDisplayDigit1 = -1;
+char lastDisplayDigit2 = -1;
 void updateLargeDisplay(char displayDigit1, char displayDigit2) {
     if(lastDisplayDigit1 == displayDigit1 && lastDisplayDigit2 == displayDigit2) {
         return;
