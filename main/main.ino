@@ -35,7 +35,6 @@ void setup()
 {
 	large_segment_display::initialize(lgSegLat, lgSegClk, lgSegSer);
     countdown::initialize(countdownPin, &countdownDuration);
-    updateDisplay(0);
 }
 
 void loop()
