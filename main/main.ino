@@ -5,12 +5,20 @@
 #define lgSegClk 9
 #define lgSegSer 10
 
-#define countdownPin 11
+#define countdownPin 12
+#define displayCountdownPin 11
 
 using namespace large_segment_display;
 using namespace countdown;
 
-unsigned long countdownDuration = 10999;
+bool displayedCountdown = false;
+
+unsigned long cntdwn = 5005; // Added time to round the countdown to prevent flickering from 5.0 to 4.9. round(x) = floor(x + 0.5)
+
+unsigned long powerselection = -10000;
+
+unsigned long countdownDuration = powerselection;
+
 
 char digits[]{
     0b11011110,
@@ -34,20 +42,31 @@ char digits[]{
 void setup()
 {
 	large_segment_display::initialize(lgSegLat, lgSegClk, lgSegSer);
-    countdown::initialize(countdownPin, &countdownDuration);
+    countdown::initialize(&countdownDuration);
+    Serial.begin(9600);
 }
-
+ 
 void loop()
 {
-    countdown::tick();
+    bool displayCountdown = digitalRead(displayCountdownPin);
 
-    unsigned long timeLeft = countdown::getTimeLeft() / 100; // count in deciseconds
+    if(displayCountdown ^ displayedCountdown) {
+        countdownDuration = displayCountdown ? cntdwn : powerselection;
+        countdown::reset();
+    }   
 
-    updateTime(timeLeft);
+
+    if(digitalRead(countdownPin)) { // The countdown is freezes when the countdown pin is on
+        countdown::reset();
+    } else {
+        unsigned long timeLeft = displayCountdown ? countdown::getTimeLeft() / 100 : countdown::getTimeLeft() * 10 / powerselection; // time in deciseconds
+
+        updateDisplayNumber(timeLeft);
+    }
 }
 
 
-inline void updateTime(char timeLeft) {
+inline void updateDisplayNumber(char timeLeft) {
 
     char secs = digits[timeLeft / 10 % 10 & 0xf] | 1; // 0b1 because of the decimal point. 
 

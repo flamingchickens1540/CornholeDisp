@@ -3,18 +3,9 @@ namespace countdown {
 
     /**
      * @brief Does the prerequisites for the countdown
-     * 
-     * @param countdownPin countdown pin
+     *
      */
-    void initialize(char countdownPin, unsigned long* cntdwnDuration);
-
-    /**
-     * @brief If the display 
-     * 
-     * @return true: the countdown is on
-     * @return false: the countdown is off
-     */
-    inline bool isOn();
+    void initialize(unsigned long* cntdwnDuration);
 
     /**
      * @brief returns the time since the start of the countdown
@@ -23,7 +14,7 @@ namespace countdown {
      */
     inline unsigned long getEndTime();
 
-    void tick();
+    void reset();
 
     /**
      * @brief get the time left
