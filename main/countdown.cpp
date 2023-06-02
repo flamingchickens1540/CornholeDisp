@@ -20,9 +20,9 @@ namespace countdown {
     }
 
     unsigned long getTimeLeft() {
-        unsigned long timeLeft = getEndTime() - millis();
-        unsigned long duration = *cntdwnDuration;
-        
+        long timeLeft = getEndTime() - millis();
+        long duration = *cntdwnDuration;
+
         return timeLeft / duration & 0b1 ? duration - timeLeft % duration : timeLeft % duration; // bounces countdown instead of rolling into the *hex negatives*
     }
 }
