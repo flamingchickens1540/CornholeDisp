@@ -13,11 +13,11 @@ using namespace countdown;
 
 bool displayedCountdown = false;
 
-unsigned long cntdwn = 5005; // Added time to round the countdown to prevent flickering from 5.0 to 4.9. round(x) = floor(x + 0.5)
+long cntdwn = 5005; // Added time to round the countdown to prevent flickering from 5.0 to 4.9. round(x) = floor(x + 0.5)
 
-unsigned long powerselection = -10000;
+long powerselection = -10000;
 
-unsigned long countdownDuration = powerselection;
+long countdownDuration = powerselection;
 
 
 char digits[]{

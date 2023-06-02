@@ -11,7 +11,7 @@ namespace countdown {
         cntdwnDuration = cntdwn;
     }
 
-    inline unsigned long getEndTime() {
+    inline long getEndTime() {
         return endTime;
     }
 
@@ -19,10 +19,10 @@ namespace countdown {
         endTime = millis() + *cntdwnDuration;
     }
 
-    unsigned long getTimeLeft() {
+    long getTimeLeft() {
         long timeLeft = getEndTime() - millis();
         long duration = *cntdwnDuration;
 
-        return timeLeft / duration & 0b1 ? duration - timeLeft % duration : timeLeft % duration; // bounces countdown instead of rolling into the *hex negatives*
+        return timeLeft / abs(duration) & 0b1 ? duration - timeLeft % duration : timeLeft % duration; // bounces countdown instead of rolling into the *hex negatives*
     }
 }

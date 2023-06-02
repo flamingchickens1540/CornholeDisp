@@ -5,14 +5,14 @@ namespace countdown {
      * @brief Does the prerequisites for the countdown
      *
      */
-    void initialize(unsigned long* cntdwnDuration);
+    void initialize(long* cntdwnDuration);
 
     /**
      * @brief returns the time since the start of the countdown
      * 
      * @return unsigned long: time since countdown
      */
-    inline unsigned long getEndTime();
+    inline long getEndTime();
 
     void reset();
 
@@ -21,5 +21,5 @@ namespace countdown {
      * 
      * @return unsigned long: time left
      */
-    unsigned long getTimeLeft();
+    long getTimeLeft();
 }
