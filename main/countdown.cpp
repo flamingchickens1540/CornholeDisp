@@ -3,11 +3,11 @@
 
 namespace countdown {
     
-    unsigned long *cntdwnDuration;
+    long *cntdwnDuration;
 
-    unsigned long endTime = 0;
+    long endTime = 0;
 
-    void initialize(unsigned long *cntdwn) {
+    void initialize(long *cntdwn) {
         cntdwnDuration = cntdwn;
     }
 

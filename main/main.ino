@@ -5,7 +5,7 @@
 #define lgSegClk 9
 #define lgSegSer 10
 
-#define countdownPin 12
+#define countPin 12
 #define displayCountdownPin 11
 
 using namespace large_segment_display;
@@ -56,7 +56,7 @@ void loop()
     }   
 
 
-    if(digitalRead(countdownPin)) { // The countdown is freezes when the countdown pin is on
+    if(digitalRead(countPin)) { // The countdown is freezes when the countdown pin is on
         countdown::reset();
     } else {
         unsigned long timeLeft = displayCountdown ? countdown::getTimeLeft() / 100 : countdown::getTimeLeft() * 10 / powerselection; // time in deciseconds
