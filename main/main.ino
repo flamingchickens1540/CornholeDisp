@@ -1,5 +1,4 @@
 #include "largeSegmentDisp.h"
-#include "countdown.h"
 
 #define lgSegLat 8
 #define lgSegClk 9
@@ -9,15 +8,14 @@
 #define displayCountdownPin 11
 
 using namespace large_segment_display;
-using namespace countdown;
 
-bool displayedCountdown = false;
+bool startedCountdown = false;
+bool startedPowerSelection = false;
 
-long cntdwn = 5005; // Added time to round the countdown to prevent flickering from 5.0 to 4.9. round(x) = floor(x + 0.5)
+long endTime = 0;
+long time = 0;
 
-long powerselection = -10000;
-
-long countdownDuration = powerselection;
+int countdownMillis = 5000;
 
 
 char digits[]{
@@ -42,27 +40,49 @@ char digits[]{
 void setup()
 {
 	large_segment_display::initialize(lgSegLat, lgSegClk, lgSegSer);
-    countdown::initialize(&countdownDuration);
-    Serial.begin(9600);
+  pinMode(countPin, INPUT);
+  pinMode(displayCountdownPin, INPUT);
+  Serial.begin(9600);
 }
  
 void loop()
 {
     bool displayCountdown = digitalRead(displayCountdownPin);
+    bool displayPowerSelection = digitalRead(countPin);
 
-    if(displayCountdown ^ displayedCountdown) {
-        countdownDuration = displayCountdown ? cntdwn : powerselection;
-        countdown::reset();
-    }   
-
-
-    if(digitalRead(countPin)) { // The countdown is freezes when the countdown pin is on
-        countdown::reset();
-    } else {
-        unsigned long timeLeft = displayCountdown ? countdown::getTimeLeft() / 100 : countdown::getTimeLeft() * 10 / powerselection; // time in deciseconds
-
-        updateDisplayNumber(timeLeft);
+    if(!displayCountdown && startedCountdown){
+        startedCountdown = false;
     }
+    if(!displayPowerSelection && startedPowerSelection){
+        startedPowerSelection = false;
+    }
+
+
+    if(displayPowerSelection){
+        Serial.print("powerSelection: ");
+        if(!startedPowerSelection){
+            Serial.print("STARTING THIS WHOLE SHABENG");
+            startedPowerSelection = true;
+            time = millis();
+        }
+        int powerLevel = ((millis() - time)/100 % 200);
+        if(powerLevel > 100){
+            powerLevel = 200-powerLevel;
+        }
+        Serial.println(powerLevel);
+        updateDisplayNumber(powerLevel);
+    }
+    else if (displayCountdown){
+        Serial.print("display: ");
+        if(!startedCountdown){
+            startedCountdown = true;
+            endTime = millis() + countdownMillis;
+        }
+        int remaining = (endTime - millis() <= 5000 ? endTime-millis() : 0)/ 100;
+        Serial.println(remaining);
+        updateDisplayNumber(remaining);
+    }
+    
 }
 
 
