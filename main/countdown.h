@@ -2,12 +2,24 @@
 namespace countdown {
 
     /**
-     * Sets the count to the duration
+     * @brief Does the prerequisites for the countdown
+     *
      */
-    void initialize(long cntdwnDuration);
+    void initialize(long* cntdwnDuration);
 
     /**
-     * Increments the cnt by one in whatever direction is necessary
-    */
-    int tick();
+     * @brief returns the time since the start of the countdown
+     * 
+     * @return unsigned long: time since countdown
+     */
+    inline long getEndTime();
+
+    void reset();
+
+    /**
+     * @brief get the time left
+     * 
+     * @return unsigned long: time left
+     */
+    long getTimeLeft();
 }

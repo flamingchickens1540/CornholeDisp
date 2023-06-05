@@ -3,37 +3,26 @@
 
 namespace countdown {
     
-    long cntdwnDuration; 
+    long *cntdwnDuration;
 
-    long cnt;
+    long endTime = 0;
 
-    int direction = 0; // 0 is down, 1 is up
-
-    void initialize(long cntdwn) 
-    {
+    void initialize(long *cntdwn) {
         cntdwnDuration = cntdwn;
-        cnt = cntdwnDuration;
     }
 
-    int tick()
-    {
-        if (direction == cntdwnDuration)
-        {
-            direction = 0;
-        }
-        else if (direction == 0) 
-        {
-            durection = 1;
-        }
-        if (direction = 0)
-        {
-            cnt--;
-        }
-        else
-        {
-            cnt++;
-        }
-        
-        return cnt;
+    inline long getEndTime() {
+        return endTime;
+    }
+
+    void reset() {
+        endTime = millis() + *cntdwnDuration;
+    }
+
+    long getTimeLeft() {
+        long timeLeft = getEndTime() - millis();
+        long duration = *cntdwnDuration;
+
+        return timeLeft / abs(duration) & 0b1 ? duration - timeLeft % duration : timeLeft % duration; // bounces countdown instead of rolling into the *hex negatives*
     }
 }
