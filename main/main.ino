@@ -56,12 +56,18 @@ void loop()
     if(!displayPowerSelection && startedPowerSelection){
         startedPowerSelection = false;
     }
+    
+    Serial.print("Display Power Selection: ");
+    Serial.print(displayPowerSelection);
+    Serial.print(" Display Countdown: ");
+    Serial.println(displayCountdown);
 
-
-    if(displayPowerSelection){
-        Serial.print("powerSelection: ");
+    if(displayCountdown && displayPowerSelection){
+        Serial.println("thing");
+    }
+    else if(displayPowerSelection){
+        // Serial.print("powerSelection: ");
         if(!startedPowerSelection){
-            Serial.print("STARTING THIS WHOLE SHABENG");
             startedPowerSelection = true;
             time = millis();
         }
@@ -69,18 +75,21 @@ void loop()
         if(powerLevel > 100){
             powerLevel = 200-powerLevel;
         }
-        Serial.println(powerLevel);
+        // Serial.println(powerLevel);
         updateDisplayNumber(powerLevel);
     }
     else if (displayCountdown){
-        Serial.print("display: ");
+        // Serial.print("display: ");
         if(!startedCountdown){
             startedCountdown = true;
             endTime = millis() + countdownMillis;
         }
         int remaining = (endTime - millis() <= 5000 ? endTime-millis() : 0)/ 100;
-        Serial.println(remaining);
+        // Serial.println(remaining);
         updateDisplayNumber(remaining);
+    }
+    else{
+       updateDisplayNumber(00);
     }
     
 }
