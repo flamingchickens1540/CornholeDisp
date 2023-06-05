@@ -51,14 +51,18 @@ void loop()
 
     if(displayCountdown ^ displayedCountdown) {
         countdownDuration = displayCountdown ? cntdwn : powerselection;
+        displayedCountdown = displayCountdown;
         countdown::reset();
     }   
 
 
-    if(digitalRead(countPin)) { // The countdown is freezes when the countdown pin is on
+    if(digitalRead(countPin)) { // The countdown freezes when the countdown pin is on
         countdown::reset();
-        if(displayCountdown) {
-            updateLargeDisplay(0b11011000, 0b01110110); // Display CH (Corn Hole on idle)
+        if(displayCountdown) { // Things that it can do when the countdown is on and the count is frozen
+            if(millis() % 20 > 10)
+                updateLargeDisplay(0b11011000, 0b01110110); // Display CH (Corn Hole on idle)
+            else
+                updateLargeDisplay(0b00011011, 0b01001100); // displays a smiley face
         }
     } else {
         unsigned long timeLeft = displayCountdown ? countdown::getTimeLeft() / 100 : 1 - countdown::getTimeLeft() * 10 / powerselection; // time in deciseconds
@@ -80,7 +84,7 @@ inline void updateDisplayNumber(char timeLeft) {
     large_segment_display::nextDigit();
 }
 
-char lastDisplayDigit1 = -1, lastDisplayDigit2 = -1;
+char lastDisplayDigit1 = -1, lastDisplayDigit2 = -1; // -1 because it is the display's default
 void updateLargeDisplay(char displayDigit1, char displayDigit2) {
     if(lastDisplayDigit1 == displayDigit1 && lastDisplayDigit2 == displayDigit2) {
         return;
