@@ -23,6 +23,6 @@ namespace countdown {
         long timeLeft = getEndTime() - millis();
         long duration = *cntdwnDuration;
 
-        return timeLeft / abs(duration) & 0b1 ? duration - timeLeft % duration : timeLeft % duration; // bounces countdown instead of rolling into the *hex negatives*
+        return timeLeft / duration & 0b1 ? duration - timeLeft % duration : timeLeft % duration; // bounces countdown instead of rolling into the *hex negatives*
     }
 }
