@@ -5,8 +5,8 @@
 #define lgSegClk 9
 #define lgSegSer 10
 
-#define countPin 12
-#define displayCountdownPin 11
+#define countPin 12 // Count pin decides to show the display counting
+#define displayCountdownPin 11 // Displays the countdown or powerselection
 
 using namespace large_segment_display;
 using namespace countdown;
@@ -43,7 +43,6 @@ void setup()
 {
 	large_segment_display::initialize(lgSegLat, lgSegClk, lgSegSer);
     countdown::initialize(&countdownDuration);
-    Serial.begin(9600);
 }
  
 void loop()
@@ -56,18 +55,20 @@ void loop()
     }   
 
 
-    if(digitalRead(countPin)) {
+    if(digitalRead(countPin)) { // The countdown is freezes when the countdown pin is on
+        countdown::reset();
+        if(displayCountdown) {
+            updateLargeDisplay(0b11011000, 0b01110110); // Display CH (Corn Hole on idle)
+        }
+    } else {
         unsigned long timeLeft = displayCountdown ? countdown::getTimeLeft() / 100 : 1 - countdown::getTimeLeft() * 10 / powerselection; // time in deciseconds
 
         updateDisplayNumber(timeLeft);
-    } else { // The countdown is freezes when the countdown pin is on
-        countdown::reset();
     }
 }
 
 
 inline void updateDisplayNumber(char timeLeft) {
-
     char secs = digits[timeLeft / 10 % 10 & 0xf] | 1; // 0b1 because of the decimal point. 
 
     if(timeLeft > 100) {
@@ -75,12 +76,11 @@ inline void updateDisplayNumber(char timeLeft) {
     } else {
         updateLargeDisplay(digits[timeLeft % 10 & 0xf], secs);
     }
+
     large_segment_display::nextDigit();
 }
 
-
-char lastDisplayDigit1 = -1;
-char lastDisplayDigit2 = -1;
+char lastDisplayDigit1 = -1, lastDisplayDigit2 = -1;
 void updateLargeDisplay(char displayDigit1, char displayDigit2) {
     if(lastDisplayDigit1 == displayDigit1 && lastDisplayDigit2 == displayDigit2) {
         return;
