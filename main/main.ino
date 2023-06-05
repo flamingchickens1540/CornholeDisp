@@ -59,7 +59,7 @@ void loop()
     if(digitalRead(countPin)) { // The countdown is freezes when the countdown pin is on
         countdown::reset();
     } else {
-        unsigned long timeLeft = displayCountdown ? countdown::getTimeLeft() / 100 : countdown::getTimeLeft() * 10 / powerselection; // time in deciseconds
+        unsigned long timeLeft = displayCountdown ? countdown::getTimeLeft() / 100 : 1 - countdown::getTimeLeft() * 10 / powerselection; // time in deciseconds
 
         updateDisplayNumber(timeLeft);
     }
