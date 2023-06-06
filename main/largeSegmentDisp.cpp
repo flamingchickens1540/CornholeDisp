@@ -8,8 +8,6 @@ namespace large_segment_display {
     char clk;
     char ser;
 
-    char segPos = 0;
-
     void initialize(char latPin, char clkPin, char serPin) {
         startPin(lat = latPin);
         startPin(clk = clkPin);

@@ -5,7 +5,7 @@
 #define lgSegClk 9
 #define lgSegSer 10
 
-#define countPin 12 // Count pin decides to show the display counting
+#define countPin 12 // This pin tells whether the countdown or powerselection should be actively counting and updating numbers.
 #define displayCountdownPin 11 // Displays the countdown or powerselection
 
 using namespace large_segment_display;
@@ -15,10 +15,9 @@ bool displayedCountdown = false;
 
 long cntdwn = 5005; // Added time to round the countdown to prevent flickering from 5.0 to 4.9. round(x) = floor(x + 0.5)
 
-long powerselection = -10000;
+long powerselection = 10000;
 
 long countdownDuration = powerselection;
-
 
 char digits[]{
     0b11011110,
@@ -50,24 +49,26 @@ void loop()
     bool displayCountdown = digitalRead(displayCountdownPin);
 
     if(displayCountdown ^ displayedCountdown) {
-        countdownDuration = displayCountdown ? cntdwn : powerselection;
+        countdownDuration = displayCountdown ? cntdwn : powerselection; // changes the countdownDuration
         displayedCountdown = displayCountdown;
         countdown::reset();
     }   
 
 
-    if(digitalRead(countPin)) { // The countdown freezes when the countdown pin is on
+    if(digitalRead(countPin)) { // The countdown/powerselection freezes when the countdown pin is on
         countdown::reset();
-        if(displayCountdown) { // Things that it can do when the countdown is on and the count is frozen
-            if(millis() % 20 > 10)
+        if(displayCountdown) { // Since the countdown will never stop counting down, when the count pin is on and the countdown needs to be display, pictures will be displayed instead
+            if(millis() % 20 > 10) // Every 10 seconds, the countdown switches what it displays
                 updateLargeDisplay(0b11011000, 0b01110110); // Display CH (Corn Hole on idle)
             else
                 updateLargeDisplay(0b00011011, 0b01001100); // displays a smiley face
         }
     } else {
-        unsigned long timeLeft = displayCountdown ? countdown::getTimeLeft() / 100 : 1 - countdown::getTimeLeft() * 10 / powerselection; // time in deciseconds
-
-        updateDisplayNumber(timeLeft);
+        updateDisplayNumber(
+            displayCountdown ? 
+            countdown::getTimeLeft() / 100 : 
+            1 - countdown::getTimeLeft() * 10 / powerselection // time in deciseconds
+        );
     }
 }
 
