@@ -5,8 +5,8 @@
 #define lgSegClk 9
 #define lgSegSer 10
 
-#define countPin 12 // This pin tells whether the countdown or powerselection should be actively counting and updating numbers.
-#define displayCountdownPin 11 // Displays the countdown or powerselection
+#define countPin 11 // This pin tells whether the countdown or powerselection should be actively counting and updating numbers.
+#define displayCountdownPin 12 // Displays the countdown or powerselection
 
 using namespace large_segment_display;
 using namespace countdown;
@@ -48,7 +48,7 @@ void loop()
 {
     bool displayCountdown = digitalRead(displayCountdownPin);
 
-    if(displayCountdown ^ displayedCountdown) {
+    if(displayCountdown ^ displayedCountdown) { // I used XOR to make people confused. XOR is !=
         countdownDuration = displayCountdown ? cntdwn : powerselection; // changes the countdownDuration
         displayedCountdown = displayCountdown;
         countdown::reset();
@@ -67,7 +67,7 @@ void loop()
         updateDisplayNumber(
             displayCountdown ? 
             countdown::getTimeLeft() / 100 : 
-            1 - countdown::getTimeLeft() * 10 / powerselection // time in deciseconds
+            10 - 10 * countdown::getTimeLeft() / powerselection  // time in deciseconds
         );
     }
 }
